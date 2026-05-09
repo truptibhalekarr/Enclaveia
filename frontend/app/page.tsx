@@ -63,7 +63,7 @@ export default function LandingPage() {
             </p>
           </div>
           <a
-            href="https://github.com/YOUR-USERNAME/YOUR-REPO"
+            href="https://github.com/truptibhalekarr/Enclaveia"
             target="_blank"
             rel="noopener noreferrer"
             className="flex shrink-0 items-center gap-2 rounded-lg border border-amber-600/60 bg-amber-800/50 px-4 py-1.5 text-[13px] font-semibold text-amber-100 transition-all hover:bg-amber-700/60 hover:text-white"

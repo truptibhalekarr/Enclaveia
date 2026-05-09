@@ -1,6 +1,10 @@
 <div align="center">
 
-  <img src="frontend/public/github-banner.svg" alt="Enclaveia Banner" width="100%"/>
+  <!-- Animated Header Banner -->
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=venom&color=0:0f0c29,50:302b63,100:24243e&height=220&section=header&text=Enclaveia&fontSize=72&fontColor=ffffff&fontAlignY=42&desc=Local-First%20AI%20Decision%20Intelligence%20%E2%80%A2%20Zero%20Data%20Leakage&descAlignY=62&descSize=17&animation=fadeIn&stroke=6f42c1&strokeWidth=3" alt="Enclaveia Banner"/>
+
+  <!-- Logo -->
+  <img src="frontend/public/github-banner.svg" alt="Enclaveia Logo" width="220"/>
 
   <br/>
   <br/>
@@ -14,7 +18,6 @@
   <br/>
   <br/>
 
-  <h1>Enclaveia</h1>
   <p><strong>100% Local · Zero Data Leakage · AI-Powered Decision Intelligence</strong></p>
   <p><em>Transform raw datasets into executive dashboards and AI insights — entirely on your machine.</em></p>
 
@@ -214,5 +217,7 @@ This project is licensed under the [MIT License](LICENSE) — open-sourced for t
 ---
 
 <div align="center">
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=venom&color=0:0f0c29,50:302b63,100:24243e&height=120&section=footer&animation=fadeIn" alt="Footer"/>
+  <br/>
   <sub>Built with ❤️ by <a href="https://github.com/truptibhalekarr">truptibhalekarr</a></sub>
 </div>

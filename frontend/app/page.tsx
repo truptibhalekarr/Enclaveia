@@ -44,6 +44,36 @@ export default function LandingPage() {
     <main>
       <SiteHeader />
 
+      {/* ── DEMO MODE BANNER ── */}
+      <div className="relative z-50 w-full bg-amber-950/90 backdrop-blur-sm border-b border-amber-800/60">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-3 sm:flex-row sm:px-8">
+          <div className="flex items-center gap-3">
+            {/* Pulsing live dot */}
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
+            </span>
+            <p className="text-center text-[13px] leading-snug text-amber-100 sm:text-left">
+              <span className="font-semibold text-amber-300">Cloud Demo Mode</span>
+              {" — "}
+              AI inference is intentionally disabled here. No data ever leaves this browser.
+              For the full{" "}
+              <span className="font-semibold text-white">100% Private, Local Gemma 4</span>
+              {" "}experience, run it on your machine.
+            </p>
+          </div>
+          <a
+            href="https://github.com/YOUR-USERNAME/YOUR-REPO"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex shrink-0 items-center gap-2 rounded-lg border border-amber-600/60 bg-amber-800/50 px-4 py-1.5 text-[13px] font-semibold text-amber-100 transition-all hover:bg-amber-700/60 hover:text-white"
+          >
+            Run Locally →
+          </a>
+        </div>
+      </div>
+      {/* ── END DEMO MODE BANNER ── */}
+
       <section className="dashboard-grid-bg relative overflow-hidden px-5 pt-8 sm:px-8">
         <div className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl items-center gap-8 pb-12 lg:grid-cols-[1fr_0.9fr]">
           <div className="max-w-2xl">

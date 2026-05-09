@@ -22,9 +22,21 @@ def generate_banner():
       </pattern>
       <rect width="1200" height="400" fill="url(#grid)"/>
       
-      <!-- Bottom Wave -->
-      <use href="#wave" fill="#5c1731" fill-opacity="0.9"/>
-      <path d="M0,220 C300,320 600,120 1200,270 L1200,400 L0,400 Z" fill="#7a2142" fill-opacity="0.4"/>
+      <!-- Bottom Animated Waves -->
+      <path fill="#5c1731" fill-opacity="0.9">
+        <animate attributeName="d" 
+                 values="M0,200 C300,300 600,100 1200,250 L1200,400 L0,400 Z;
+                         M0,250 C300,150 600,350 1200,200 L1200,400 L0,400 Z;
+                         M0,200 C300,300 600,100 1200,250 L1200,400 L0,400 Z" 
+                 dur="4s" repeatCount="indefinite" />
+      </path>
+      <path fill="#7a2142" fill-opacity="0.4">
+        <animate attributeName="d" 
+                 values="M0,220 C300,320 600,120 1200,270 L1200,400 L0,400 Z;
+                         M0,270 C300,170 600,370 1200,220 L1200,400 L0,400 Z;
+                         M0,220 C300,320 600,120 1200,270 L1200,400 L0,400 Z" 
+                 dur="5s" repeatCount="indefinite" />
+      </path>
       
       <!-- Logo Image -->
       <image href="data:image/png;base64,{logo_b64}" x="350" y="50" width="500" height="150" />

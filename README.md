@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:381024,50:781a3a,100:d9787d&height=250&section=header&text=Enclaveia&fontSize=70&fontColor=ffffff&fontAlignY=38&desc=Turn%20Data%20Into%20Decisions.%20100%25%20Private.%20100%25%20Local.&descAlignY=58&descSize=20&animation=fadeIn" />
+  <img src="frontend/public/github-banner.svg" alt="Enclaveia Banner" width="100%"/>
   
   ![Powered by Gemma](https://img.shields.io/badge/Powered%20by-Gemma%204-purple?style=for-the-badge)
   ![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%20%2B%20FastAPI-black?style=for-the-badge)

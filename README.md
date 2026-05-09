@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="frontend/public/enclaveia-logo.png" alt="Enclaveia Logo" width="250"/>
+  <img src="frontend/public/github-banner.svg" alt="Enclaveia Banner" width="100%"/>
   <h1>Enclaveia</h1>
   <p><b>Turn Data Into Decisions. 100% Private. 100% Local.</b></p>
   

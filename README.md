@@ -75,16 +75,33 @@ npm run dev
 
 ---
 
-## 📸 High-Quality Visuals
+## 📸 Full Product Walkthrough
 
-### 1. Premium Upload & Landing Experience
-![Landing Page](https://via.placeholder.com/800x400?text=Please+Upload+Your+Landing+Page+Screenshot+Here)
+### 1. Landing & Seamless Upload Experience
+<img src="frontend/public/01_home.png" width="100%" alt="Home">
+<br>
+<img src="frontend/public/02_upload.png" width="100%" alt="Upload">
 
-### 2. AI-Generated Dashboard & KPIs
-![Dashboard](https://via.placeholder.com/800x400?text=Please+Upload+Your+Dashboard+Screenshot+Here)
+### 2. Smart Data Profiling & Health Check
+<img src="frontend/public/03_data_preview.png" width="100%" alt="Data Preview">
 
-### 3. Deep Statistical Summaries & Executive Insights
-![Insights](https://via.placeholder.com/800x400?text=Please+Upload+Your+AI+Insights+Screenshot+Here)
+### 3. Interactive Executive Dashboard
+<img src="frontend/public/04_dashboard_overview.png" width="100%" alt="Dashboard Overview">
+<br>
+<img src="frontend/public/05_dashboard_charts.png" width="100%" alt="Dashboard Charts">
+
+### 4. AI-Generated Business Insights
+<img src="frontend/public/06_insights.png" width="100%" alt="AI Insights">
+
+### 5. Deep Statistical Summary
+<img src="frontend/public/07_statistical_summary.png" width="100%" alt="Statistical Summary">
+
+### 6. Export & Sharing
+<img src="frontend/public/08_export.png" width="100%" alt="Export">
+<br>
+<img src="frontend/public/09_share.png" width="100%" alt="Share">
+<br>
+<img src="frontend/public/10_extra.png" width="100%" alt="Additional Features">
 
 ---
 

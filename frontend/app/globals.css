@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #e2b2b3;
+  --foreground: #351020;
+  --muted: #865568;
+  --card: #fff8f8;
+  --border: rgba(75, 11, 37, 0.15);
+  --primary: #781a3a;
+  --primary-dark: #4b0b25;
+  --accent: #f8dedf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 247, 0.14), rgba(255, 250, 247, 0)),
+    var(--background);
+  color: var(--foreground);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+.dashboard-grid-bg {
+  background-image:
+    linear-gradient(rgba(75, 11, 37, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75, 11, 37, 0.06) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.surface {
+  border: 1px solid var(--border);
+  background: rgba(255, 248, 248, 0.84);
+  box-shadow: 0 18px 60px rgba(75, 11, 37, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.hero-glass {
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  background: rgba(255, 248, 248, 0.1);
+  box-shadow: 0 28px 80px rgba(75, 11, 37, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.soft-grid-card {
+  background:
+    linear-gradient(rgba(255, 250, 247, 0.5), rgba(255, 250, 247, 0.18)),
+    linear-gradient(rgba(75, 11, 37, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75, 11, 37, 0.045) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+}
+
+.premium-float {
+  animation: premium-float 6s ease-in-out infinite;
+}
+
+.hero-bar {
+  transform-origin: bottom;
+  animation: grow-bar 900ms ease-out both;
+}
+
+.hero-skeleton-line {
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-skeleton-line::after {
+  animation: shimmer 2.4s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+@keyframes premium-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes grow-bar {
+  from {
+    transform: scaleY(0.12);
+    opacity: 0.35;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgba(122, 23, 57, 0.25);
+}
+
+@media print {
+  @page {
+    margin: 10mm;
+  }
+
+  body, main {
+    background: white !important;
+    color: black !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .surface, .card {
+    border: 1px solid #e5e7eb !important;
+    background: white !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 12px !important;
+  }
+
+  aside {
+    display: none !important;
+  }
+
+  /* Force grids to wrap properly */
+  .grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  /* Specific column resets for dashboard grid */
+  .lg\:grid-cols-\[230px_minmax\(0\,1fr\)\] {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .md\:grid-cols-2 > div {
+    flex: 1 1 calc(50% - 16px) !important;
+    min-width: 250px !important;
+  }
+
+  .xl\:grid-cols-4 > div, .xl\:grid-cols-3 > div {
+    flex: 1 1 calc(50% - 16px) !important;
+    min-width: 250px !important;
+  }
+
+  /* Ensure charts fit and don't split pages */
+  canvas, .echarts-for-react {
+    max-height: 250px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

@@ -61,24 +61,25 @@ Upload a CSV or XLSX file and instantly get:
 ## 🏛️ Architecture
 
 Enclaveia follows a **local-first, three-layer architecture**:
+
+```text
 ┌─────────────────────────────────────────────────────┐
 │                 Browser (localhost:3000)            │
 │         Next.js · React · Tailwind · ECharts        │
 │           CSV/XLSX Upload · Dashboard UI            │
 └──────────────────────┬──────────────────────────────┘
-│ HTTP
+                       │ HTTP
 ┌──────────────────────▼──────────────────────────────┐
 │             Backend (localhost:8000)                │
 │           FastAPI · Pandas · Prompt Engine          │
 │     Data Processing · Statistical Profiling         │
 └──────────────────────┬──────────────────────────────┘
-│ Local API
+                       │ Local API
 ┌──────────────────────▼──────────────────────────────┐
 │                 AI Engine (Ollama)                  │
 │                Gemma 2 2B (Local)                   │
 │   Insight Generation · Summaries · Interpretation   │
 └─────────────────────────────────────────────────────┘
-
 
 > **No data ever leaves your machine.** All three layers run locally.
 

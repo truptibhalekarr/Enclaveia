@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Download, Share2, Sparkles, TableProperties } from "lucide-react";
+import { Download, Share2, Sparkles, TableProperties, Loader2 } from "lucide-react";
 import { ChartCard } from "@/components/dashboard/chart-card";
 import { FilterSidebar } from "@/components/dashboard/filter-sidebar";
 import { InsightsPanel } from "@/components/dashboard/insights-panel";
@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { applyDashboardFilters, buildDashboardData, buildDatasetProfile } from "@/lib/data-utils";
 import { sampleRows } from "@/lib/sample-data";
 import { useDatasetStore } from "@/store/use-dataset-store";
+import type { BusinessInsight } from "@/lib/types";
 
 type Panel = "none" | "insights" | "stats";
 
@@ -20,6 +21,8 @@ export function DashboardClient() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [panel, setPanel] = useState<Panel>("none");
   const [shareText, setShareText] = useState("Share");
+  const [aiInsights, setAiInsights] = useState<BusinessInsight[] | null>(null);
+  const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
 
   const activeDataset = useMemo(() => {
     if (uploaded) return uploaded;
@@ -74,6 +77,65 @@ export function DashboardClient() {
     }
   }
 
+  async function generateAiInsights() {
+    if (panel === "insights") {
+      setPanel("none");
+      return;
+    }
+    setPanel("insights");
+
+    if (aiInsights) return; // Already generated
+
+    setIsGeneratingInsights(true);
+    try {
+      const header = activeDataset.columns.join(",");
+      const csvRows = filteredRows.map((row) =>
+        activeDataset.columns
+          .map((col) => {
+            const val = row[col];
+            if (val === null || val === undefined) return "";
+            return `"${String(val).replace(/"/g, '""')}"`;
+          })
+          .join(",")
+      );
+      const csvContent = [header, ...csvRows].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const formData = new FormData();
+      formData.append("file", blob, "dataset.csv");
+
+      const res = await fetch("http://localhost:8000/api/insights", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+
+      if (data.insights && Array.isArray(data.insights)) {
+        const mappedInsights: BusinessInsight[] = data.insights.map((item: any) => ({
+          title: item.title,
+          description: item.body,
+          evidence: "AI Generated",
+          tone: "neutral"
+        }));
+        if (data.conclusion) {
+          mappedInsights.push({
+            title: "Executive Conclusion",
+            description: data.conclusion,
+            evidence: "Strategic Recommendation",
+            tone: "positive"
+          });
+        }
+        setAiInsights(mappedInsights);
+      } else {
+        setAiInsights(dashboard.insights);
+      }
+    } catch (err) {
+      console.error("AI Insights Error:", err);
+      setAiInsights(dashboard.insights);
+    } finally {
+      setIsGeneratingInsights(false);
+    }
+  }
+
   return (
     <section className="px-4 py-5 sm:px-6">
       <div className="mx-auto max-w-[1500px]">
@@ -115,7 +177,7 @@ export function DashboardClient() {
             </div>
 
             <div className="no-print flex flex-col gap-3 border-t border-wine-700/12 pt-4 sm:flex-row">
-              <Button type="button" onClick={() => setPanel(panel === "insights" ? "none" : "insights")}>
+              <Button type="button" onClick={generateAiInsights}>
                 <Sparkles className="h-4 w-4" aria-hidden />
                 Generate Insights
               </Button>
@@ -128,7 +190,14 @@ export function DashboardClient() {
             {panel === "insights" ? (
               <div>
                 <h2 className="mb-4 font-display text-4xl font-bold text-ink">Business Insights</h2>
-                <InsightsPanel insights={dashboard.insights} />
+                {isGeneratingInsights ? (
+                  <div className="flex flex-col items-center justify-center rounded-xl border border-wine-700/12 bg-white/40 p-12 text-wine-600 backdrop-blur-md">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                    <p className="mt-4 font-medium">Gemma is analyzing your data...</p>
+                  </div>
+                ) : (
+                  <InsightsPanel insights={aiInsights || dashboard.insights} />
+                )}
               </div>
             ) : null}
 

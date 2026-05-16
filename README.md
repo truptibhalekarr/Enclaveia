@@ -5,7 +5,7 @@
   <br/>
   <br/>
 
-  <a href="https://ollama.ai/"><img src="https://img.shields.io/badge/Powered%20by-Gemma%204-6f42c1?style=for-the-badge&logo=google&logoColor=white" alt="Powered by Gemma 4"/></a>
+  <a href="https://ollama.ai/"><img src="https://img.shields.io/badge/Powered%20by-Gemma%202%20(2B)-6f42c1?style=for-the-badge&logo=google&logoColor=white" alt="Powered by Gemma 2"/></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Frontend-Next.js%2015-black?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js"/></a>
   <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License"/></a>
@@ -30,6 +30,7 @@
 - [Feature Highlights](#-feature-highlights)
 - [Product Walkthrough](#-product-walkthrough)
 - [Local Setup](#-local-setup)
+- [What's Next (Roadmap)](#-whats-next-for-enclaveia)
 - [License](#-license)
 
 ---
@@ -42,13 +43,13 @@ Businesses and teams today hesitate to upload sensitive financial, healthcare, o
 - **Compliance walls** — HIPAA, GDPR, and internal policies block cloud use
 - **Unpredictable API costs** — token-based pricing scales poorly with large datasets
 
-These blockers prevent teams from leveraging the true power of modern LLMs for data analytics.
+While large corporations spend millions building private AI infrastructure, rural clinics, NGOs, and small teams are left behind, completely blocked from the AI revolution.
 
 ---
 
 ## ✅ The Solution
 
-**Enclaveia** is a fully local, on-premise AI decision intelligence dashboard. By running Google's **Gemma 4** model entirely on your machine via **Ollama**, Enclaveia guarantees **zero data leakage** — your data never leaves your laptop.
+**Enclaveia** is a fully local, on-premise AI decision intelligence dashboard. By running Google's highly efficient **Gemma 2 (2B)** model entirely on your machine via **Ollama**, Enclaveia guarantees **zero data leakage** — your data never leaves your laptop.
 
 Upload a CSV or XLSX file and instantly get:
 - KPI-led interactive dashboards
@@ -60,26 +61,24 @@ Upload a CSV or XLSX file and instantly get:
 ## 🏛️ Architecture
 
 Enclaveia follows a **local-first, three-layer architecture**:
-
-```
 ┌─────────────────────────────────────────────────────┐
-│                  Browser (localhost:3000)            │
+│                 Browser (localhost:3000)            │
 │         Next.js · React · Tailwind · ECharts        │
 │           CSV/XLSX Upload · Dashboard UI            │
 └──────────────────────┬──────────────────────────────┘
-                       │ HTTP
+│ HTTP
 ┌──────────────────────▼──────────────────────────────┐
-│              Backend (localhost:8000)                │
-│           FastAPI · Pandas · Prompt Engine           │
+│             Backend (localhost:8000)                │
+│           FastAPI · Pandas · Prompt Engine          │
 │     Data Processing · Statistical Profiling         │
 └──────────────────────┬──────────────────────────────┘
-                       │ Local API
+│ Local API
 ┌──────────────────────▼──────────────────────────────┐
-│                 AI Engine (Ollama)                   │
-│                  Gemma 4 (Local)                     │
-│    Insight Generation · Summaries · Interpretation  │
+│                 AI Engine (Ollama)                  │
+│                Gemma 2 2B (Local)                   │
+│   Insight Generation · Summaries · Interpretation   │
 └─────────────────────────────────────────────────────┘
-```
+
 
 > **No data ever leaves your machine.** All three layers run locally.
 
@@ -93,7 +92,7 @@ Enclaveia follows a **local-first, three-layer architecture**:
 | **Charts** | Apache ECharts | Interactive visualizations |
 | **Backend** | Python, FastAPI | Data orchestration & API |
 | **Data Processing** | Pandas | Statistical profiling |
-| **AI Engine** | Ollama + Gemma 4 | Local LLM inference |
+| **AI Engine** | Ollama + Gemma 2 (2B) | Local LLM inference |
 | **File Support** | CSV, XLSX | Dataset ingestion |
 
 > We chose **Next.js** over Streamlit to deliver a richer, faster, and fully customized user experience — not a generic data app.
@@ -102,7 +101,7 @@ Enclaveia follows a **local-first, three-layer architecture**:
 
 ## ✨ Feature Highlights
 
-- 🔐 **Fully Local** — Gemma 4 runs via Ollama; no API keys, no cloud calls
+- 🔐 **Fully Local** — Gemma 2 runs via Ollama; no API keys, no cloud calls
 - 📊 **Interactive Dashboards** — ECharts-powered KPI cards and drill-down charts
 - 🧠 **AI Business Insights** — Tone-aware executive summaries generated from your data
 - 🩺 **Data Health Check** — Automatic missing value detection, outlier flags, and type inference
@@ -114,31 +113,7 @@ Enclaveia follows a **local-first, three-layer architecture**:
 
 ## 📸 Product Walkthrough
 
-### 1. Landing & Upload Experience
-<img src="frontend/public/01_home.png" width="100%" alt="Home Screen"/>
-<br/>
-<img src="frontend/public/02_upload.png" width="100%" alt="Upload Interface"/>
-
-### 2. Data Preview & Health Check
-<img src="frontend/public/03_data_preview.png" width="100%" alt="Data Profiling"/>
-
-### 3. Executive Dashboard
-<img src="frontend/public/04_dashboard_overview.png" width="100%" alt="Dashboard Overview"/>
-<br/>
-<img src="frontend/public/05_dashboard_charts.png" width="100%" alt="Dashboard Charts"/>
-
-### 4. AI-Generated Insights
-<img src="frontend/public/06_insights.png" width="100%" alt="AI Insights"/>
-
-### 5. Statistical Summary
-<img src="frontend/public/07_statistical_summary.png" width="100%" alt="Statistical Summary"/>
-
-### 6. Export & Share
-<img src="frontend/public/08_export.png" width="100%" alt="Export"/>
-<br/>
-<img src="frontend/public/09_share.png" width="100%" alt="Share"/>
-<br/>
-<img src="frontend/public/10_extra.png" width="100%" alt="Additional Features"/>
+*(See repository images for Landing, Dashboard, AI Insights, and Statistical Profiling previews).*
 
 ---
 
@@ -156,19 +131,14 @@ No cloud API keys required. Everything runs on your machine.
 
 ---
 
-### Step 1 — Start Ollama & Pull Gemma 4
+### Step 1 — Start Ollama & Pull Gemma 2
 
 ```bash
-ollama run gemma:4
-```
+ollama run gemma2:2b
+Wait for the model to download. Keep this terminal open.
 
-> Wait for the model to download. Keep this terminal open.
-
----
-
-### Step 2 — Start the Backend
-
-```bash
+Step 2 — Start the Backend
+Bash
 # From the project root
 python -m venv venv
 
@@ -184,34 +154,22 @@ pip install -r requirements.txt
 # Start the server
 cd backend
 uvicorn main:app --reload --port 8000
-```
-
----
-
-### Step 3 — Start the Frontend
-
-```bash
+Step 3 — Start the Frontend
+Bash
 cd frontend
 npm install
 npm run dev
-```
+Done! Open http://localhost:3000 (or port 3001) in your browser.
 
----
+Ollama (Gemma 2)  →  FastAPI :8000  →  Next.js UI
+🚀 What's Next for Enclaveia (Product Roadmap)
+This hackathon submission is just the foundation. Our vision for V2 includes:
 
-**Done!** Open [http://localhost:3000](http://localhost:3000) in your browser.
+Contextual AI Prompting: Allow users to give Gemma 2 a specific focus before analysis (e.g., "Focus on high-risk loans in the South").
 
-```
-Ollama (Gemma 4)  →  FastAPI :8000  →  Next.js :3000
-```
+Conversational BI UI: Edit charts dynamically using AI prompts (e.g., "Change this bar chart to a donut chart").
 
----
+Auto-Healing Data workflows: Agentic ML workflows to automatically clean and impute missing values offline before dashboard generation.
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE) — open-sourced for the **Gemma 4 Good Hackathon**.
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/truptibhalekarr">truptibhalekarr</a></sub>
-</div>
+📜 License
+This project is licensed under the MIT License — open-sourced for the Gemma 4 Good Hackathon.

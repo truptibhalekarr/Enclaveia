@@ -78,10 +78,22 @@ export function parseNumber(value: unknown) {
   return Number.isFinite(numeric) ? numeric : null;
 }
 
-function parseDate(value: unknown) {
+function parseDate(value: unknown, allowNumericYear = false) {
   if (value instanceof Date && Number.isFinite(value.getTime())) return value;
-  if (typeof value !== "string" && typeof value !== "number") return null;
-  const parsed = new Date(value);
+  if (typeof value === "number") {
+    if (allowNumericYear && Number.isInteger(value) && value >= 1900 && value <= 2100) {
+      return new Date(value, 0, 1);
+    }
+    return null;
+  }
+  if (typeof value !== "string") return null;
+  const clean = value.trim();
+  if (!clean) return null;
+  if (/^\d{1,5}$/.test(clean)) {
+    const year = Number(clean);
+    return allowNumericYear && year >= 1900 && year <= 2100 ? new Date(year, 0, 1) : null;
+  }
+  const parsed = new Date(clean);
   return Number.isFinite(parsed.getTime()) ? parsed : null;
 }
 
@@ -125,14 +137,18 @@ function normalizedName(name: string) {
   return name.toLowerCase().replace(/[_-]+/g, " ").trim();
 }
 
+function hasIdentifierName(name: string) {
+  const clean = normalizedName(name);
+  return idPatterns.some((pattern) => clean === pattern || clean.includes(pattern));
+}
+
 function isLikelyDateColumnName(name: string) {
   const clean = normalizedName(name);
   return dateNamePatterns.some((pattern) => clean.includes(pattern));
 }
 
 function isLikelyIdColumn(column: ColumnProfile, totalRows: number) {
-  const clean = normalizedName(column.name);
-  const hasIdName = idPatterns.some((pattern) => clean === pattern || clean.includes(pattern));
+  const hasIdName = hasIdentifierName(column.name);
   const mostlyUnique = totalRows > 20 && column.uniqueCount / totalRows > 0.92;
   const stats = column.numericStats;
   const looksSequential = stats ? stats.min <= 2 && stats.max >= totalRows * 0.75 && mostlyUnique : false;
@@ -149,9 +165,11 @@ function inferColumnType(values: unknown[], columnName = ""): ColumnType {
   if (!present.length) return "text";
 
   const numericCount = present.filter((value) => parseNumber(value) !== null).length;
-  const dateCount = present.filter((value) => parseDate(value) !== null).length;
+  const allowNumericYear = isLikelyDateColumnName(columnName);
+  const dateCount = present.filter((value) => parseDate(value, allowNumericYear) !== null).length;
   const uniqueCount = new Set(present.map((value) => String(value))).size;
 
+  if (hasIdentifierName(columnName) && uniqueCount / present.length > 0.55) return "text";
   if (isLikelyDateColumnName(columnName) && dateCount / present.length >= 0.45) return "date";
   if (numericCount / present.length >= 0.75) return "number";
   if (dateCount / present.length >= 0.65) return "date";
@@ -258,14 +276,26 @@ function titleCase(value: string) {
 
 export function friendlyColumnName(value?: string) {
   if (!value) return "Primary Metric";
-  return titleCase(value)
+  const label = titleCase(value)
     .replace(/\bUsd\b/g, "USD")
+    .replace(/\bInr\b/g, "INR")
+    .replace(/\bGbp\b/g, "GBP")
+    .replace(/\bEur\b/g, "EUR")
     .replace(/\bId\b/g, "ID")
     .replace(/\bS No\b/g, "Serial Number")
     .replace(/\bCountry Code\b/g, "Country")
     .replace(/\bFuel Type\b/g, "Fuel Type")
     .replace(/\bFounded At\b/g, "Founded Date")
     .replace(/\bFunding Total USD\b/g, "Funding Total");
+
+  return label
+    .replace(/\bEst(?:imated)?\s+/g, "")
+    .replace(/\bAmt\b/g, "Amount")
+    .replace(/\bQty\b/g, "Quantity")
+    .replace(/\bPct\b/g, "Percent")
+    .replace(/\s+\b(?:INR|USD|GBP|EUR)\b$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function isFinancialMetric(column?: string) {
@@ -302,19 +332,49 @@ function getCategoryColumns(profile: DatasetProfile) {
     });
 }
 
-function dashboardTitle(profile: DatasetProfile, metricColumn?: string) {
-  const subject = titleCase(profile.fileName || "Business Dataset")
+function cleanDatasetSubject(fileName: string) {
+  return titleCase(fileName || "Business Dataset")
     .replace(/\bCsv\b/g, "")
     .replace(/\bXlsx\b/g, "")
+    .replace(/\bXls\b/g, "")
+    .replace(/\bDashboard\b/gi, "")
+    .replace(/\bDataset\b/gi, "")
     .replace(/\bData\b/g, "Data")
+    .replace(/\s+/g, " ")
     .trim();
+}
 
-  const metric = friendlyColumnName(metricColumn);
-  if (subject.toLowerCase().includes("automobile")) return "Automobile Pricing Intelligence";
-  if (subject.toLowerCase().includes("startup")) return "Startup Funding Intelligence";
-  if (subject.toLowerCase().includes("incident")) return "Incident Pattern Intelligence";
-  if (metricColumn) return `${metric} Intelligence`;
-  return `${subject} Intelligence`;
+function isGenericSubject(subject: string) {
+  const clean = normalizedName(subject);
+  return !clean || ["business", "demo business", "sample", "uploaded"].some((term) => clean === term || clean.includes(term));
+}
+
+function metricFocusLabel(metricColumn?: string) {
+  const clean = normalizedName(metricColumn ?? "");
+  if (!clean) return "Business";
+  if (clean.includes("price") || clean.includes("cost")) return "Pricing";
+  if (clean.includes("revenue") || clean.includes("income")) return "Revenue";
+  if (clean.includes("sales") || clean.includes("gmv") || clean.includes("amount")) return "Sales";
+  if (clean.includes("funding")) return "Funding";
+  if (clean.includes("profit") || clean.includes("margin") || clean.includes("earnings")) return "Profitability";
+  if (impactPatterns.some((pattern) => clean.includes(pattern))) return "Impact";
+  if (volumePatterns.some((pattern) => clean.includes(pattern))) return "Volume";
+  return friendlyColumnName(metricColumn);
+}
+
+function dashboardTitle(profile: DatasetProfile, metricColumn?: string) {
+  const subject = cleanDatasetSubject(profile.fileName);
+  const metric = metricFocusLabel(metricColumn);
+  
+  if (subject.toLowerCase().includes("automobile")) return "Automobile Pricing Dashboard";
+  if (subject.toLowerCase().includes("startup")) return "Startup Funding Dashboard";
+  if (subject.toLowerCase().includes("incident")) return "Incident Pattern Dashboard";
+  if (!isGenericSubject(subject)) return `${subject} Dashboard`;
+  if (!subject && metricColumn && metric !== "Business") return `${metric} Dashboard`;
+  
+  // If we have a nice clean metric, just call it the Metric Dashboard instead of appending intelligence
+  if (metricColumn) return `${friendlyColumnName(metricColumn)} Dashboard`;
+  return "Business Performance Dashboard";
 }
 
 function dashboardSubtitle(profile: DatasetProfile, metricColumn?: string, categoryColumn?: string, dateColumn?: string) {
@@ -343,12 +403,13 @@ function groupByCategory(rows: DataRow[], categoryColumn: string, metricColumn?:
 
 function groupByDate(rows: DataRow[], dateColumn: string, metricColumn?: string) {
   const grouped = new Map<string, number>();
-  const dates = rows.map((row) => parseDate(row[dateColumn])).filter((date): date is Date => Boolean(date));
+  const allowNumericYear = isLikelyDateColumnName(dateColumn);
+  const dates = rows.map((row) => parseDate(row[dateColumn], allowNumericYear)).filter((date): date is Date => Boolean(date));
   const years = new Set(dates.map((date) => date.getFullYear()));
   const groupByYear = years.size > 3 || normalizedName(dateColumn).includes("year") || normalizedName(dateColumn).includes("founded");
 
   rows.forEach((row) => {
-    const date = parseDate(row[dateColumn]);
+    const date = parseDate(row[dateColumn], allowNumericYear);
     if (!date) return;
     const label = groupByYear
       ? String(date.getFullYear())
@@ -362,8 +423,8 @@ function groupByDate(rows: DataRow[], dateColumn: string, metricColumn?: string)
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function getQuarter(value: unknown) {
-  const date = parseDate(value);
+function getQuarter(value: unknown, allowNumericYear = false) {
+  const date = parseDate(value, allowNumericYear);
   if (!date) return null;
   return `Q${Math.floor(date.getMonth() / 3) + 1}`;
 }
@@ -374,10 +435,10 @@ export function applyDashboardFilters(rows: DataRow[], profile: DatasetProfile, 
       if (!selected || selected === "all") return true;
       const columnProfile = profile.columns.find((item) => item.name === column);
       if (columnProfile?.type === "date") {
-        const date = parseDate(row[column]);
+        const date = parseDate(row[column], isLikelyDateColumnName(column));
         if (!date) return false;
         if (/^\d{4}$/.test(selected)) return String(date.getFullYear()) === selected;
-        return getQuarter(row[column]) === selected;
+        return getQuarter(row[column], isLikelyDateColumnName(column)) === selected;
       }
       return String(row[column] ?? "Unknown") === selected;
     });
@@ -679,7 +740,7 @@ function buildInsights(rows: DataRow[], profile: DatasetProfile): BusinessInsigh
   if (dateColumn) {
     const quarterly = new Map<string, number>();
     rows.forEach((row) => {
-      const quarter = getQuarter(row[dateColumn]);
+      const quarter = getQuarter(row[dateColumn], isLikelyDateColumnName(dateColumn));
       if (!quarter) return;
       quarterly.set(quarter, (quarterly.get(quarter) ?? 0) + (metricColumn ? parseNumber(row[metricColumn]) ?? 0 : 1));
     });
@@ -823,8 +884,10 @@ function buildStats(rows: DataRow[], profile: DatasetProfile): StatisticalRow[] 
 export function buildDashboardData(rows: DataRow[], profile: DatasetProfile): DashboardData {
   const workingProfile = buildDatasetProfile(rows, profile.fileName, profile.fileSize);
   const metricColumn = findPrimaryMetric(workingProfile);
-  const dateColumn = workingProfile.columns.find((column) => column.type === "date")?.name;
-  const categoryColumn = workingProfile.columns.find((column) => column.type === "category" && column.uniqueCount > 1)?.name;
+  const dateColumn =
+    workingProfile.columns.find((column) => column.type === "date" && isLikelyDateColumnName(column.name))?.name ??
+    workingProfile.columns.find((column) => column.type === "date")?.name;
+  const categoryColumn = getCategoryColumns(workingProfile)[0]?.name;
   return {
     title: dashboardTitle(workingProfile, metricColumn),
     subtitle: dashboardSubtitle(workingProfile, metricColumn, categoryColumn, dateColumn),

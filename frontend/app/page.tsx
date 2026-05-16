@@ -58,7 +58,7 @@ export default function LandingPage() {
               {" — "}
               AI inference is intentionally disabled here. No data ever leaves this browser.
               For the full{" "}
-              <span className="font-semibold text-white">100% Private, Local Gemma 4</span>
+              <span className="font-semibold text-white">100% Private, Local Gemma 2(2B)</span>
               {" "}experience, run it on your machine.
             </p>
           </div>
